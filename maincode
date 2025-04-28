@@ -1,0 +1,134 @@
+#include <Servo.h>
+
+// Movement motor driver pins
+#define ENA 3
+#define ENB 11
+#define IN1 5
+#define IN2 6
+#define IN3 9
+#define IN4 10
+
+// Seed disposal motor (second motor driver)
+#define SEED_IN1 7
+#define SEED_IN2 8
+#define ENAS 12
+
+// Servo for hole making
+#define HOLE_SERVO_PIN 4
+
+Servo holeServo;
+
+void setup() {
+  // Motor pins
+  pinMode(ENA, OUTPUT);
+  pinMode(ENAS, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(13,OUTPUT);
+
+  pinMode(SEED_IN1, OUTPUT);
+  pinMode(SEED_IN2, OUTPUT);
+
+  holeServo.attach(HOLE_SERVO_PIN);
+
+  Serial.begin(9600); // Start Serial communication for Bluetooth
+}
+
+void loop() {
+  if (Serial.available()) {
+    char command = Serial.read();
+
+    if (command == 'F') {
+      moveForward();
+    }
+    else if (command == 'B') {
+      moveBackward();
+    }
+    else if (command == 'L') {
+      turnLeft();
+    }
+    else if (command == 'R') {
+      turnRight();
+    }
+    else if (command == 'S') {
+      stopMotors();
+    }
+    else if (command == 'H') {
+      makeHole();
+    }
+    else if (command == 'D') {
+      seedDrop();
+    }
+    else if (command == 'T') {
+      digitalWrite(13,0);
+      delay(500);
+       digitalWrite(13,1);
+      delay(500);
+       digitalWrite(13,0);
+      delay(500);
+       digitalWrite(13,1);
+      delay(500);
+    }
+  }
+}
+
+void moveForward() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  analogWrite(ENA, 200);
+  analogWrite(ENB, 200);
+}
+
+void moveBackward() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+  analogWrite(ENA, 200);
+  analogWrite(ENB, 200);
+}
+
+void turnLeft() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  analogWrite(ENA, 200);
+  analogWrite(ENB, 200);
+}
+
+void turnRight() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+  analogWrite(ENA, 200);
+  analogWrite(ENB, 200);
+}
+
+void stopMotors() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
+
+void makeHole() {
+  holeServo.write(90); // Move servo down
+  delay(1000);
+  holeServo.write(0);  // Move servo up
+}
+
+void seedDrop() {
+  digitalWrite(SEED_IN1, HIGH);
+  digitalWrite(SEED_IN2, LOW);
+  analogWrite(ENAS, 200);
+  delay(500);
+  digitalWrite(SEED_IN1, LOW);
+  digitalWrite(SEED_IN2, LOW);
+}
