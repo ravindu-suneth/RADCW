@@ -1,9 +1,9 @@
 #include <Servo.h>
 
 // Movement motor driver pins
-#define ENA 3
+#define ENA 5
 #define ENB 11
-#define IN1 5
+#define IN1 4
 #define IN2 6
 #define IN3 9
 #define IN4 10
@@ -14,7 +14,7 @@
 #define ENAS 12
 
 // Servo for hole making
-#define HOLE_SERVO_PIN 4
+#define HOLE_SERVO_PIN 3
 
 Servo holeServo;
 
